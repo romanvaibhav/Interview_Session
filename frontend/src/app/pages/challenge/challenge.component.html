@@ -1,0 +1,63 @@
+<div class="w-full flex items-start space-x-4 p-4">
+  <!-- Button -->
+  <button (click)="toggleSidebar()"
+    class="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold text-sm py-2 px-4 rounded-md shadow-md transition-transform transform hover:scale-105 hover:from-blue-700 hover:to-blue-900">
+    Create Session
+  </button>
+
+  <!-- Sidebar (Appears Beside the Button) -->
+  <div *ngIf="isSidebarOpen" class="w-64 h-70 bg-gray-100 shadow-lg rounded-md overflow-y-auto">
+    <!-- Sticky Heading -->
+    <h2 class="w-full text-lg font-bold sticky top-0 bg-gray-100 p-4 shadow-md z-10">
+      Projects
+    </h2>
+
+    <ul class="p-2">
+      <li *ngFor="let project of projectData"
+          (click)="selectProject(project)"
+          class="cursor-pointer text-red-700 p-2 hover:bg-gray-200 rounded-md">
+        {{ project.title }}
+      </li>
+    </ul>
+  </div>
+</div>
+<div>
+
+</div>
+
+<!-- Selected Project Details-->
+<div class="w-full space-y-4 mt-4">
+  <h2 class="text-lg font-bold mb-5">Challenges</h2>
+
+  <div *ngFor="let challenge of challengeDetail; let i = index" class="p-4 bg-gray-100 shadow-md rounded-md relative">
+
+    <!-- Title Row with Delete & Copy Icons -->
+    <div class="flex justify-between items-center ">
+      <h3 class="font-semibold mb-6">{{ challenge.title }}</h3>
+      <div class="flex space-x-2">
+        <!-- Copy Title Button -->
+
+        <!-- Delete Button -->
+        <button (click)="deleteChallenge(challenge._id)"
+        class="text-red-600 hover:text-red-700 font-bold text-2xl -mt-10 mr-5">
+        ❌
+      </button>
+
+      </div>
+    </div>
+
+    <!-- URL Row with Copy Icon -->
+    <div class="flex justify-between items-center ">
+      <a [href]="challenge.url" target="_blank" class="text-blue-500 hover:underline">
+        {{ challenge.url }}
+      </a>
+      <button (click)="copyToClipboard(challenge.url)" class="text-gray-500 hover:text-gray-700 mr-4 mt-1">
+        📋
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+
