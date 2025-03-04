@@ -59,7 +59,14 @@ export class AuthService {
   patchSession(sessionForm:any,sessionId:string):Observable<object>{
     console.log(sessionId);
     const params = new HttpParams().set('id', sessionId);
-    return this.httpClient.patch(`${AuthService.baseUrl}/session/update`,sessionForm,{params});
+    let filteredForm = { ...sessionForm };
+    // Remove empty string values
+    Object.keys(filteredForm).forEach(key => {
+      if (filteredForm[key] === "" || filteredForm[key] === null) {
+        delete filteredForm[key];  // Removes the key if it's empty
+      }
+    });
+    return this.httpClient.patch(`${AuthService.baseUrl}/session/update`,filteredForm,{params});
   }
 
   deleteSessionById(id:any):Observable<object>{
@@ -99,6 +106,11 @@ export class AuthService {
     console.log(candidateId);
     const params = new HttpParams().set('id', candidateId);
     return this.httpClient.get(`${AuthService.baseUrl}/challenge/read`,{params});
+  }
+  getOneChallengeById(id:any):Observable<object>{
+    console.log(id);
+    const params = new HttpParams().set('challengeId', id);
+    return this.httpClient.get(`${AuthService.baseUrl}/challenge/readone`,{params})
   }
 
 }

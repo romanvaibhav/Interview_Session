@@ -3,6 +3,7 @@ import { AuthService } from '../../cors/service/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { MY_FORM } from '../../constant/constant';
 
 @Component({
   selector: 'app-home',
@@ -27,13 +28,7 @@ export class HomeComponent {
   }
 
   //Reactive Form
-  sessionForm:FormGroup=new FormGroup({
-    candidateName:new FormControl("",[Validators.required]),
-    status:new FormControl("",),
-    score:new FormControl(""),
-    interviewerId: new FormControl(""),
-    time_duration: new FormControl("")
-  })
+  sessionForm=MY_FORM
 
 
 
@@ -54,6 +49,10 @@ export class HomeComponent {
       console.log("Session Created",value);
       this.getSessionData();
       this.sessionDate=value;
+      this.sessionForm.reset();
+      this.closeModal();
+      this.sessionForm.get("interviewerId")?.setValue(this.userid);
+
     },
     error:(err)=>{
       console.log("Got error while creating session",err);
@@ -70,6 +69,8 @@ export class HomeComponent {
       this.sessionDate=value;
       this.isUpdate=false;
       this.sessionForm.reset();
+      this.sessionForm.get("interviewerId")?.setValue(this.userid);
+
 
     },
     error:(err)=>{
@@ -83,6 +84,10 @@ export class HomeComponent {
       console.log("Emp Details Deleted Succesfulyy",value);
       this.sessionDate=value;
       this.isUpdate=false;
+      this.sessionForm.reset();
+      this.sessionForm.get("interviewerId")?.setValue(this.userid);
+
+
     },
     error:(err)=>{
     console.log("Getting error while deleting the Emp Details",err);
@@ -127,6 +132,22 @@ export class HomeComponent {
 
   navigate(Id: string) {
     this.route.navigate(["user/challenge"], { queryParams: { id: Id } });
+    this.sessionForm.patchValue({
+      status: 'In-Progress' // Set status to "In-Progress"{)
+       });
+    const sessionId=Id
+    console.log("Form values which are patching are",this.sessionForm.value);
+    this.authService.patchSession(this.sessionForm.value,sessionId).subscribe({next:(value)=>{
+      console.log("Succesfull Patching values",value);
+      this.sessionDate=value;
+      this.isUpdate=false;
+      this.sessionForm.reset();
+
+    },
+    error:(err)=>{
+      console.log(err);
+    }
+  })
   }
 
 }

@@ -1,5 +1,5 @@
 const challengeDetailSchema=require("../models/challenge");
-
+const mongoose = require("mongoose"); 
 async function addChallenge(req, res) {
     const { challenges, userId, candidateId } = req.body;
 
@@ -73,8 +73,36 @@ async function readAChallengen(req,res){
     }
 }
 
+async function getChallengeByChallengeId(req, res){
+    const { challengeId } = req.query;
+    console.log(challengeId);
+  
+    try {
+      // Using the positional operator to return only the matching challenge element.
+      const candidate = await challengeDetailSchema.findOne(
+        { 'challenges._id': challengeId },
+        { 'challenges.$': 1 }
+      );
+      console.log(candidate);
+      
+    //   if (!challengeDetailSchema || !challengeDetailSchema.challenges || challengeDetailSchema.challenges.length === 0) {
+    //     return res.status(404).json({ error: 'Challenge not found' });
+    //   }
+      
+      // Return the matched challenge from the challenges array
+      return res.status(200).json(candidate);
+    } catch (error) {
+      console.error('Error retrieving challenge:', error);
+      return res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
+  
+
+
 module.exports={
     readAChallengen,
     deleteChallenge,
-    addChallenge
+    addChallenge,
+    getChallengeByChallengeId
 }

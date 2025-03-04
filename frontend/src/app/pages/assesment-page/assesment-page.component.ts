@@ -18,16 +18,31 @@ export class AssesmentPageComponent {
   safeUrl:any;
 
   ngOnInit() {
+
     this.projectId = this.route.snapshot.queryParams['id'];
     console.log("ID from query params:", this.projectId);
-    this.getProjectById();
+    // this.getProjectById();
+    this.getChallengeById();
   }
 
 
-  getProjectById(){
-    this.athService.getProjectById(this.projectId).subscribe({next:(value:any)=>{
+  // getProjectById(){
+  //   this.athService.getProjectById(this.projectId).subscribe({next:(value:any)=>{
+  //     console.log("Got the value",value);
+  //     const Url=value.StackBlitzUrl;
+  //     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(Url);
+  //   },
+  //   error:(err)=>{
+  //     console.log(err);
+  //   }
+  // })
+  // }
+
+  getChallengeById(){
+    this.athService.getOneChallengeById(this.projectId).subscribe({next:(value:any)=>{
       console.log("Got the value",value);
-      const Url=value.StackBlitzUrl;
+      const Url=value.challenges[0].url;
+      console.log(Url);
       this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(Url);
     },
     error:(err)=>{
