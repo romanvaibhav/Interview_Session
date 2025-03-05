@@ -4,7 +4,16 @@ const mongoose=require("mongoose")
 const challengeSchema = new mongoose.Schema({
     challenges: [{
         url: { type: String },
-        title:{type:String}  // URL of the challenge
+        title:{type:String},
+        score:{
+            type:String,
+            enum:['Not Attempted', 'Partial Solution', 'Completed', 'Outstanding'],
+            default: 'Not Attempted' 
+        },
+        status: { 
+            type: String, 
+            enum: ['In-Progress', 'Completed','active'], 
+            default: 'active' },
     }],
     userId: {
         type: mongoose.Schema.Types.ObjectId,

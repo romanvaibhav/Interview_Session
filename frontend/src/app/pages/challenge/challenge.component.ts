@@ -5,12 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CHALLENGE_URL, MY_FORM } from '../../constant/constant';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-challenge',
-  imports: [CommonModule,ClipboardModule,ReactiveFormsModule],
+  imports: [CommonModule,ClipboardModule,ReactiveFormsModule,FormsModule],
   providers:[Clipboard],
   templateUrl: './challenge.component.html',
   styleUrl: './challenge.component.css'
@@ -26,18 +26,18 @@ export class ChallengeComponent {
   ngOnInit():void{
     this.route.queryParamMap.subscribe(params => {
       this.candidateId = params.get('id');
-      console.log("Received Candidate ID:", this.candidateId);
+      console.log("Received Session ID:", this.candidateId);
       // Use challengeId as needed
     });
     this.getProjData();
     this.fetchChallenge();
+    this.loadTimer();
     this.startTimer();
   }
   submitSession(){
   }
 
 
-  sessionForm=MY_FORM;
   getProjData(){
     this.authService.getProject().subscribe({next:(value:any)=>{
       console.log("Got the EmpData",value);
@@ -112,24 +112,71 @@ export class ChallengeComponent {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
+  sessionForm=MY_FORM;
+  Score:any;
+  Status:any;
+  Time:any;
   createSession(){
+    this.sessionForm.get("score")?.setValue(this.Score);
+    this.sessionForm.get("status")?.setValue(this.Status);
+    this.sessionForm.get("time_duration")?.setValue(this.Time);
+    this.sessionForm.get("submit")?.setValue("true");
+    console.log(this.Score,this.Status,this.Time);
     console.log(this.sessionForm.value);
+    this.authService.patchSession(this.sessionForm.value,this.candidateId).subscribe({next:(value)=>{
+      console.log("Got the values",value);
+      // this.sessionDate=value;
+      this.isModalOpen = false;
+      localStorage.removeItem('timeElapsed');
+      this.displayedTime = "00:00"; // Reset displayed time
+      this.timeElapsed = 0;
+      clearInterval(this.timerInterval);
+
+      this.sessionForm.reset();
+      // this.sessionForm.get("interviewerId")?.setValue(this.userid);
+
+    },
+    error:(err)=>{
+      console.log(err);
+    }
+  })
   }
+
   isModalOpen=false;
+
+  displayedTime:any;
   openModal() {
     console.log("Hello")
     this.isModalOpen = true;
-    this.pauseTimer();
+    // this.pauseTimer();
+    this.displayedTime = this.getFormattedTime();
+    this.Time=this.displayedTime;
+    this.getFormattedTime();
   }
+
   closeModal() {
     this.isModalOpen = false;
+    this.startTimer();
   }
+
   timeElapsed: number = 0; // Store time in seconds
   timerInterval: any;
   startTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+
     this.timerInterval = setInterval(() => {
-      this.timeElapsed++; // Increase time by 1 second
+      this.timeElapsed++;
+      localStorage.setItem('timeElapsed', this.timeElapsed.toString()); // Store elapsed time
     }, 1000);
+  }
+
+  loadTimer() {
+    const storedTime = localStorage.getItem('timeElapsed');
+    if (storedTime !== null) {
+      this.timeElapsed = parseInt(storedTime, 10); // Load saved time
+    }
   }
 
   getFormattedTime(): string {
@@ -141,8 +188,16 @@ export class ChallengeComponent {
   padZero(value: number): string {
     return value < 10 ? `0${value}` : `${value}`;
   }
+
   pauseTimer() {
     clearInterval(this.timerInterval);
+    localStorage.setItem('timeElapsed', this.timeElapsed.toString()); // Save time when paused
+  }
+
+  resetTimer() {
+    clearInterval(this.timerInterval);
+    this.timeElapsed = 0;
+    localStorage.removeItem('timeElapsed'); // Reset storage
   }
 
 }

@@ -25,8 +25,9 @@
     </div>
   </div>
   <div class="p-4 bg-gray-100 rounded-md">
-    <h2 class="text-lg font-bold">Time: {{ getFormattedTime() }}</h2>
+    <h2 class="text-lg font-bold text-green-500"> <span class="text-black">Time:</span> {{ getFormattedTime() }}</h2>
   </div>
+
 
 
 
@@ -70,7 +71,63 @@
         📋
       </button>
     </div>
-  </div>
+
+    <div class="col-span-2">
+      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Score:
+      </label>
+      <div class="flex items-center justify-between w-full">
+        <!-- Radio Options -->
+        <div class="flex space-x-4">
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              name="score"
+              value="Not Attempted"
+              class="text-red-500 border-gray-300 focus:ring-red-500"
+            />
+            <span class="ml-2">Not Attempted</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              name="score"
+              value="Partial Solution"
+              class="text-red-500 border-gray-300 focus:ring-red-500"
+            />
+            <span class="ml-2">Partial Solution</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              name="score"
+              value="Completed"
+              class="text-red-500 border-gray-300 focus:ring-red-500"
+            />
+            <span class="ml-2">Completed</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              name="score"
+              value="Outstanding"
+              class="text-red-500 border-gray-300 focus:ring-red-500"
+            />
+            <span class="ml-2">Outstanding</span>
+          </label>
+        </div>
+
+        <!-- Submit Button at the End -->
+        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          Submit
+        </button>
+      </div>
+      <div>
+        <label for="">Status:</label>
+      </div>
+    </div>
+
+
 </div>
 
 
@@ -92,7 +149,7 @@
               </button>
           </div>
           <!-- Modal body -->
-          <form [formGroup]="sessionForm" class="p-4 md:p-5">
+          <form class="p-4 md:p-5">
               <div class="grid gap-4 mb-4">
 
                 <div class="col-span-2">
@@ -103,7 +160,7 @@
                     <label class="inline-flex items-center">
                       <input
                         type="radio"
-                        formControlName="score"
+                        [(ngModel)]="Score"
                         name="score"
                         value="Not Attempted"
                         class="text-red-500 border-gray-300 focus:ring-red-500"
@@ -113,7 +170,7 @@
                     <label class="inline-flex items-center">
                       <input
                         type="radio"
-                        formControlName="score"
+                        [(ngModel)]="Score"
                         name="score"
                         value="Partial Solution"
                         class="text-red-500 border-gray-300 focus:ring-red-500"
@@ -123,7 +180,7 @@
                     <label class="inline-flex items-center">
                       <input
                         type="radio"
-                        formControlName="score"
+                        [(ngModel)]="Score"
                         name="score"
                         value="Completed"
                         class="text-red-500 border-gray-300 focus:ring-red-500"
@@ -133,7 +190,7 @@
                     <label class="inline-flex items-center">
                       <input
                         type="radio"
-                        formControlName="score"
+                        [(ngModel)]="Score"
                         name="score"
                         value="Outstanding"
                         class="text-red-500 border-gray-300 focus:ring-red-500"
@@ -149,19 +206,15 @@
                   </label>
 
                   <div class="flex space-x-4">
-                    <!-- In-Progress Radio Button -->
-
-
-                    <!-- Completed Radio Button -->
                     <label class="inline-flex items-center">
-                      <input type="radio" formControlName="status" value="Completed" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500">
+                      <input type="radio" [(ngModel)]="Status" name="Status" value="Completed" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500">
                       <span class="ml-2 text-sm text-gray-900 dark:text-white">Completed</span>
                     </label>
                   </div>
                 </div>
                     <div class="col-span-2">
-                      <label for="time_duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Time_duration</label>
-                      {{getFormattedTime()}}
+                      <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Time_duration</label>
+                      {{displayedTime}}
                     </div>
               </div>
 

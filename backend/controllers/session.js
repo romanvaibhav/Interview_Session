@@ -1,13 +1,14 @@
 const InterviewSchema=require("../models/session");
 async function createSession(req,res){
-    const {score, status, candidateName, interviewerId,time_duration}=req.body;
+    const {score, status, candidateName, interviewerId,time_duration,submit}=req.body;
     try{
         const sessionRegi= new InterviewSchema({
             candidateName,
             interviewerId,
             time_duration,
             status,
-            score
+            score,
+            submit
 
         });
         const sessionDetail=await sessionRegi.save();
@@ -33,7 +34,7 @@ async function deleteSession(req,res){
 }
 
 async function updateSession(req, res) {
-    const { candidateName, status, score, time_duration } = req.body; 
+    const { candidateName, status, score, time_duration,submit } = req.body; 
     try {
         const { id } = req.query;
         console.log("I Got the Id",id);
@@ -48,7 +49,8 @@ async function updateSession(req, res) {
                 ...(candidateName !== undefined && { candidateName }),
                 ...(status !== undefined && { status }),
                 ...(score !== undefined && { score }),
-                ...(time_duration !== undefined && { time_duration })
+                ...(time_duration !== undefined && { time_duration }),
+                ...(submit !== undefined && {submit})
                 },
             { new: true }
         );

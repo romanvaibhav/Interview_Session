@@ -10,7 +10,7 @@ async function addChallenge(req, res) {
         if (!challengeRegi) {
             // If no document exists, create a new one
             challengeRegi = new challengeDetailSchema({
-                challenges: challenges.map(({ url, title }) => ({ url, title })),  // Store both url and title
+                challenges: challenges.map(({ url, title, score, status }) => ({ url, title, score,status })),  // Store both url and title
                 userId,
                 candidateId,
             });

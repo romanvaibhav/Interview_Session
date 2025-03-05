@@ -8,6 +8,7 @@ export const MY_FORM: FormGroup = new FormGroup({
   status:new FormControl("",),
   score:new FormControl(""),
   interviewerId: new FormControl(""),
-  time_duration: new FormControl("")
+  time_duration: new FormControl(""),
+  submit:new FormControl(""),
 });
 

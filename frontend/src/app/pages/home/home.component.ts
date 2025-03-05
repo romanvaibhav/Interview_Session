@@ -36,8 +36,12 @@ export class HomeComponent {
   getSessionData(){
     this.authService.getSession().subscribe({next:(value)=>{
       console.log("Got the Session Data Sceesfully",value);
-      this.sessionDate=value;
-    },
+      if (Array.isArray(value)) {
+        this.sessionDate = value.filter(session => session.submit === 'false');
+      } else {
+        console.error("Unexpected data structure:", value);
+        this.sessionDate = []; // Set empty array to avoid errors
+      }    },
     error:(err)=>{
       console.log("Got error while getting sessionData",err);
     }
@@ -125,6 +129,7 @@ export class HomeComponent {
       score:this.selectSession.score || '',
       interviewerId:this.selectSession.interviewerId || '',
       time_duration:this.selectSession.time_duration || '',
+      submit:this.selectSession.sessionForm || ''
     })
     console.log("Form values are",this.sessionForm.value);
   }

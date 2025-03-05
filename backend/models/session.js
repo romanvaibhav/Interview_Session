@@ -22,6 +22,11 @@ const InterviewSessionSchema = new mongoose.Schema({
     type:String,
     default:null
   },
+  submit:{
+    type:String,
+    enum: ['true','false'], 
+    default:false
+  }
 });
 
  const InterviewSchema= mongoose.model('InterviewSession', InterviewSessionSchema);
