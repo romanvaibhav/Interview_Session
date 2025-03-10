@@ -47,18 +47,15 @@
   <h2 class="text-lg font-bold mb-5">Challenges</h2>
 
   <div *ngFor="let challenge of challengeDetail; let i = index" class="p-4 bg-gray-100 shadow-md rounded-md relative">
-
     <!-- Title Row with Delete & Copy Icons -->
     <div class="flex justify-between items-center ">
       <h3 class="font-semibold mb-6">{{ challenge.title }}</h3>
       <div class="flex space-x-2">
-        <!-- Copy Title Button -->
-
         <!-- Delete Button -->
         <button (click)="deleteChallenge(challenge._id)"
-        class="text-red-600 hover:text-red-700 font-bold text-2xl -mt-10 mr-5">
-        ❌
-      </button>
+          class="text-red-600 hover:text-red-700 font-bold text-2xl -mt-10 mr-5">
+          ❌
+        </button>
       </div>
     </div>
 
@@ -67,7 +64,7 @@
       <a [href]="challenge.url" target="_blank" class="text-blue-500 hover:underline">
         {{ challenge.url }}
       </a>
-      <button (click)="copyToClipboard(challengeUrl+'?id='+challenge._id)" class="text-gray-500 hover:text-gray-700 mr-4 mt-1">
+      <button (click)="copyToClipboard(challengeUrl + '?id=' + challenge._id)" class="text-gray-500 hover:text-gray-700 mr-4 mt-1">
         📋
       </button>
     </div>
@@ -82,8 +79,9 @@
           <label class="inline-flex items-center">
             <input
               type="radio"
-              name="score"
-              value="Not Attempted"
+              [checked]="challenge.score === 'Not Attempted'"
+              (change)="updateScore(challenge._id, 'Not Attempted')"
+              name="score{{ challenge._id }}"
               class="text-red-500 border-gray-300 focus:ring-red-500"
             />
             <span class="ml-2">Not Attempted</span>
@@ -91,8 +89,9 @@
           <label class="inline-flex items-center">
             <input
               type="radio"
-              name="score"
-              value="Partial Solution"
+              [checked]="challenge.score === 'Partial Solution'"
+              (change)="updateScore(challenge._id, 'Partial Solution')"
+              name="score{{ challenge._id }}"
               class="text-red-500 border-gray-300 focus:ring-red-500"
             />
             <span class="ml-2">Partial Solution</span>
@@ -100,8 +99,9 @@
           <label class="inline-flex items-center">
             <input
               type="radio"
-              name="score"
-              value="Completed"
+              [checked]="challenge.score === 'Completed'"
+              (change)="updateScore(challenge._id, 'Completed')"
+              name="score{{ challenge._id }}"
               class="text-red-500 border-gray-300 focus:ring-red-500"
             />
             <span class="ml-2">Completed</span>
@@ -109,8 +109,9 @@
           <label class="inline-flex items-center">
             <input
               type="radio"
-              name="score"
-              value="Outstanding"
+              [checked]="challenge.score === 'Outstanding'"
+              (change)="updateScore(challenge._id, 'Outstanding')"
+              name="score{{ challenge._id }}"
               class="text-red-500 border-gray-300 focus:ring-red-500"
             />
             <span class="ml-2">Outstanding</span>
@@ -118,15 +119,16 @@
         </div>
 
         <!-- Submit Button at the End -->
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+        <button (click)="submitChallenge(challenge._id)" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
           Submit
         </button>
       </div>
+
       <div>
-        <label for="">Status:</label>
+        <label>Status: {{ challenge.status }}</label>
       </div>
     </div>
-
+  </div>
 
 </div>
 

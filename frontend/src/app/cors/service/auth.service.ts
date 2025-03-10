@@ -112,6 +112,15 @@ export class AuthService {
     const params = new HttpParams().set('challengeId', id);
     return this.httpClient.get(`${AuthService.baseUrl}/challenge/readone`,{params})
   }
+  patchChallenge(id:any,status:any,score:any):Observable<object>{
+    console.log(id);
+    const params = new HttpParams().set('challengeId', id);
+    const body = {
+      status: status,  // Add status to the body
+      score: score     // Add score to the body
+    };
+    return this.httpClient.patch(`${AuthService.baseUrl}/challenge/update`,body,{params})
+  }
 
 }
 

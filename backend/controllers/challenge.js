@@ -96,6 +96,51 @@ async function getChallengeByChallengeId(req, res){
       return res.status(500).json({ error: 'Server error' });
     }
   };
+
+
+  
+  async function patchChallengeById(req, res) {
+    const { challengeId } = req.query; // challengeId from the query params
+    const { score, status } = req.body; // score and status from the body of the request
+  
+    console.log("ChallengeId for Patch Req", challengeId);
+  
+    try {
+      let updateFields = {};
+  
+      if (score) {
+        updateFields['challenges.$.score'] = score; // Add score update if provided
+      }
+      if (status) {
+        updateFields['challenges.$.status'] = status; // Add status update if provided
+      }
+      if (Object.keys(updateFields).length === 0) {
+        return res.status(400).json({ message: 'No valid fields provided for update' });
+      }
+  
+      // Update the challenge in the challenges array that matches the challengeId
+      const updatedChallenge = await challengeDetailSchema.findOneAndUpdate(
+        {
+          'challenges._id': challengeId, // match challenge by challengeId
+        },
+        {
+          $set: updateFields, // Only set the fields that were provided
+        },
+        { new: true } // This option returns the updated document
+      );
+      if (!updatedChallenge) {
+        return res.status(404).json({ message: 'Challenge not found' });
+      }
+      res.status(200).json({
+        message: 'Challenge updated successfully',
+        data: updatedChallenge,
+      });
+    } catch (error) {
+      console.error('Error while updating challenge:', error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  }
+  
   
   
 
@@ -104,5 +149,6 @@ module.exports={
     readAChallengen,
     deleteChallenge,
     addChallenge,
-    getChallengeByChallengeId
+    getChallengeByChallengeId,
+    patchChallengeById
 }

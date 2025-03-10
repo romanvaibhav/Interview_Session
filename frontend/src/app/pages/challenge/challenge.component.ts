@@ -99,6 +99,22 @@ export class ChallengeComponent {
   })
   }
 
+  Score:any;
+  submitChallenge(challengeId:any){
+    console.log("Got the challenge id here",challengeId);
+    console.log(this.Score);
+    const status="Completed";
+    this.authService.patchChallenge(challengeId,status,this.Score).subscribe({next:(value:any)=>{
+      console.log("Succesfully patched the values",value);
+      // this.router.navigateByUrl("");
+    },
+    error:(err)=>{
+      console.log("Got the error at the patching challenge values",err);
+    }
+  })
+
+  }
+
   copyToClipboard(url:any){
     navigator.clipboard.writeText(url).then(() => {
       alert('URL copied to clipboard!');
@@ -113,7 +129,6 @@ export class ChallengeComponent {
   }
 
   sessionForm=MY_FORM;
-  Score:any;
   Status:any;
   Time:any;
   createSession(){
@@ -198,6 +213,17 @@ export class ChallengeComponent {
     clearInterval(this.timerInterval);
     this.timeElapsed = 0;
     localStorage.removeItem('timeElapsed'); // Reset storage
+  }
+
+
+  ScoringChallenge(challengeId: number) {
+    // Logic to handle challenge submission
+    console.log('Challenge submitted:', challengeId);
+  }
+  updateScore(challengeId: number, newScore: string) {
+    // const challenge = this.challengeDetail.find(c => c._id === challengeId);
+      this.Score = newScore;
+
   }
 
 }

@@ -9,7 +9,6 @@ async function createSession(req,res){
             status,
             score,
             submit
-
         });
         const sessionDetail=await sessionRegi.save();
         const sessionDetails=await InterviewSchema.find({});

@@ -6,6 +6,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
 import { AssesmentPageComponent } from './pages/assesment-page/assesment-page.component';
 import { ChallengeComponent } from './pages/challenge/challenge.component';
+import { CompletedComponent } from './pages/completed/completed.component';
+import { ExpiredComponent } from './pages/expired/expired.component';
+import { HostoryComponent } from './pages/hostory/hostory.component';
 
 export const routes: Routes = [
   {
@@ -35,6 +38,10 @@ export const routes: Routes = [
       {
         path:"challenge",
         component:ChallengeComponent
+      },
+      {
+        path:"history",
+        component:HostoryComponent
       }
     ]
   },
@@ -43,5 +50,13 @@ export const routes: Routes = [
     component: AssesmentPageComponent,
   },
   { path: "regi", component: RegistrationComponent },
+  {
+    path:"assesment/completed",
+    component:CompletedComponent
+  },
+  {
+    path:"assesment/expired",
+    component:ExpiredComponent
+  }
 
 ];
