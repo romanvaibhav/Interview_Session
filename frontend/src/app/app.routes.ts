@@ -9,6 +9,7 @@ import { ChallengeComponent } from './pages/challenge/challenge.component';
 import { CompletedComponent } from './pages/completed/completed.component';
 import { ExpiredComponent } from './pages/expired/expired.component';
 import { HostoryComponent } from './pages/hostory/hostory.component';
+import { HistoryChallengeDataComponent } from './pages/history-challenge-data/history-challenge-data.component';
 
 export const routes: Routes = [
   {
@@ -42,6 +43,9 @@ export const routes: Routes = [
       {
         path:"history",
         component:HostoryComponent
+      },{
+        path:"historyChallenge",
+        component:HistoryChallengeDataComponent
       }
     ]
   },

@@ -46,8 +46,9 @@
 <div class="w-full space-y-4 mt-4">
   <h2 class="text-lg font-bold mb-5">Challenges</h2>
 
-  <div *ngFor="let challenge of challengeDetail; let i = index" class="p-4 bg-gray-100 shadow-md rounded-md relative">
-    <!-- Title Row with Delete & Copy Icons -->
+  <div *ngFor="let challenge of challengeDetail; let i = index"
+  class="ml-2 mx-2 p-4 bg-gray-100 shadow-md rounded-md relative border border-gray-800">
+ <!-- Title Row with Delete & Copy Icons -->
     <div class="flex justify-between items-center ">
       <h3 class="font-semibold mb-6">{{ challenge.title }}</h3>
       <div class="flex space-x-2">
@@ -129,7 +130,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 

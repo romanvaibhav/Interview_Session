@@ -65,8 +65,41 @@ async function updateSession(req, res) {
 
 async function readSession(req,res){
     try{
-        const sessiontDetail=await InterviewSchema.find({});
-        return res.status(200).json(sessiontDetail);
+        let { page, limit, search, sortBy, sortOrder } = req.query;
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 10;
+
+        const skip = (page - 1) * limit;
+
+        let filter = {}; 
+
+        if (search && search.trim() !== "") {
+            filter = {
+                name: { $regex: search, $options: "i" }
+            };
+        }
+
+        let sort = {};  
+        if (sortBy) {
+            sort[sortBy] = sortOrder === "asc" ? -1 : 1;  
+        } else {
+            sort["date"] = 1; 
+        }
+
+        const employees = await InterviewSchema.find(filter)
+            .collation({ locale: "en", strength: 2 })  
+            .sort(sort)
+            .skip(skip)
+            .limit(limit);
+
+        const totalEmployees = await InterviewSchema.countDocuments(filter);
+
+        res.status(200).json({
+            totalEmployees,
+            totalPages: Math.ceil(totalEmployees / limit),
+            currentPage: page,
+            employees
+        });
     }
     catch(err){
         return res.status(400).json({message:"Error at Adding Eployee Data", error: err.message });

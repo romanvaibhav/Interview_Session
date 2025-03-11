@@ -1,28 +1,26 @@
 <div>
-  <div class="bg-blue-50 w-full h-14 rounded-md flex justify-between items-center px-4">
+  <div class="bg-blue-50 w-full h-14 rounded-md flex justify-between items-center px-4 mr-10">
     <div class="flex space-x-2">
 
-      <select
+      <select [(ngModel)]="sortBy" (change)="applyFilters()"
       class="border border-gray-400 bg-blue-100 text-gray-700 p-2 rounded-md focus:ring-2 focus:ring-blue-400">
-      <option value="Filter">Filter</option>
+      <option value="Filter" >Filter</option>
       <option value="name">Name</option>
-      <option value="Join_Date">Date</option>
+      <option value="Join_Date">Score</option>
     </select>
-
-      <input   class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" type="text" placeholder="Search" />
+      <input [(ngModel)]="searchText" class="p-2 w-80 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" type="text" placeholder="Search" />
     </div>
-
     <div>
       <label for="pageLimit">Page Limit</label>
-      <select id="pageLimit">
-        <option *ngFor="let page of " [value]="page">{{ page }}</option>
+      <select [(ngModel)]="pageLimit" (change)="onPageLimitChange($event)" id="pageLimit">
+        <option *ngFor="let page of pageArray" [value]="page">{{ page }}</option>
       </select>
     </div>
   </div>
 
   <div class="p-4 rounded mt-2 m-2 border">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">  
-      <div *ngFor="let candidate of sessionDate" [ngClass]="{
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div  *ngFor="let candidate of sessionDate" (click)="navigate(candidate._id)" [ngClass]="{
         'bg-green-200': candidate.score =='Completed',
         'bg-green-400': candidate.score == 'Outstanding',
         'bg-green-50': candidate.score == 'Partial Solution',

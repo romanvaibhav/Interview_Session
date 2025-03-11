@@ -31,10 +31,13 @@ export class HomeComponent {
   sessionForm=MY_FORM
 
 
-
+  currentPage = 1;
+  pageLimit=10;
+  searchText:any;
+  sortBy:any
   sessionDate:any;
   getSessionData(){
-    this.authService.getSession().subscribe({next:(value)=>{
+    this.authService.getSession(this.currentPage, this.pageLimit, this.searchText, this.sortBy).subscribe({next:(value)=>{
       console.log("Got the Session Data Sceesfully",value);
       if (Array.isArray(value)) {
         this.sessionDate = value.filter(session => session.submit === 'false');
