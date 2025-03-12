@@ -23,11 +23,9 @@ export class HomeComponent {
     console.log("USer ID",this.userid);
     this.sessionForm.get("interviewerId")?.setValue(this.userid);
     console.log(this.sessionForm.value);
-
     this.getSessionData();
   }
 
-  //Reactive Form
   sessionForm=MY_FORM
 
 
@@ -37,10 +35,10 @@ export class HomeComponent {
   sortBy:any
   sessionDate:any;
   getSessionData(){
-    this.authService.getSession(this.currentPage, this.pageLimit, this.searchText, this.sortBy).subscribe({next:(value)=>{
+    this.authService.getSession(this.currentPage, this.pageLimit, this.searchText, this.sortBy).subscribe({next:(value:any)=>{
       console.log("Got the Session Data Sceesfully",value);
-      if (Array.isArray(value)) {
-        this.sessionDate = value.filter(session => session.submit === 'false');
+      if (value.employees) {
+        this.sessionDate = value.employees.filter((session:any) => session.submit === 'false');
       } else {
         console.error("Unexpected data structure:", value);
         this.sessionDate = []; // Set empty array to avoid errors
@@ -52,10 +50,16 @@ export class HomeComponent {
   }
 
   createSession(){
-    this.authService.postSession(this.sessionForm.value).subscribe({next:(value)=>{
+    this.authService.postSession(this.sessionForm.value).subscribe({next:(value:any)=>{
       console.log("Session Created",value);
       this.getSessionData();
-      this.sessionDate=value;
+      if (value) {
+        const session=value
+        this.sessionDate = session.filter((session:any) => session.submit === 'false');
+      } else {
+        console.error("Unexpected data structure:", value);
+        this.sessionDate = []; // Set empty array to avoid errors
+      }
       this.sessionForm.reset();
       this.closeModal();
       this.sessionForm.get("interviewerId")?.setValue(this.userid);
@@ -71,14 +75,17 @@ export class HomeComponent {
   sendBtn(){
     console.log(this.userid);
     console.log(this.sessionForm.value);
-    this.authService.patchSession(this.sessionForm.value,this.selectedEmployeeId).subscribe({next:(value)=>{
+    this.authService.patchSession(this.sessionForm.value,this.selectedEmployeeId).subscribe({next:(value:any)=>{
       console.log("Got the values",value);
-      this.sessionDate=value;
+      if (value) {
+        const session=value
+        this.sessionDate = session.filter((session:any) => session.submit === 'false');      } else {
+        console.error("Unexpected data structure:", value);
+        this.sessionDate = []; // Set empty array to avoid errors
+      }
       this.isUpdate=false;
       this.sessionForm.reset();
       this.sessionForm.get("interviewerId")?.setValue(this.userid);
-
-
     },
     error:(err)=>{
       console.log(err);
@@ -87,9 +94,16 @@ export class HomeComponent {
   }
 
   deleteBtn(){
-    this.authService.deleteSessionById(this.selectedEmployeeId).subscribe({next:(value)=>{
+    this.authService.deleteSessionById(this.selectedEmployeeId).subscribe({next:(value:any)=>{
       console.log("Emp Details Deleted Succesfulyy",value);
-      this.sessionDate=value;
+      if (value) {
+        const session=value
+        this.sessionDate = session.filter((session:any) => session.submit === 'false');
+        console.log(this.sessionDate);
+      } else {
+        // console.error("Unexpected data structure:", value);
+        this.sessionDate = []; // Set empty array to avoid errors
+      }
       this.isUpdate=false;
       this.sessionForm.reset();
       this.sessionForm.get("interviewerId")?.setValue(this.userid);

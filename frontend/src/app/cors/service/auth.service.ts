@@ -27,8 +27,8 @@ export class AuthService {
     return this.httpClient.patch(`${AuthService.baseUrl}/user/update/${projectId}`, projForm);
   }
 
-  getProject():Observable<object>{
-    return this.httpClient.get(`${AuthService.baseUrl}/user/read`);
+  getProject(page: number, limit: number, search: string = '', sortBy: string = '', sortOrder: string = 'asc'):Observable<object>{
+    return this.httpClient.get(`${AuthService.baseUrl}/user/read?page=${page}&limit=${limit}&search=${search}&sortBy=${sortBy}&sortOrder=${sortOrder}`);
   }
 
   getProjectById(projectId:any):Observable<object>{
@@ -75,7 +75,7 @@ export class AuthService {
     return this.httpClient.delete(`${AuthService.baseUrl}/session/delete`,{params});
   }
 
-  getSession(page: number, limit: number, search: string = '', sortBy: string = 'name', sortOrder: string = 'asc'):Observable<object>{
+  getSession(page: number, limit: number, search: string = '', sortBy: string = '', sortOrder: string = 'asc'):Observable<object>{
     return this.httpClient.get(`${AuthService.baseUrl}/session/read?page=${page}&limit=${limit}&search=${search}&sortBy=${sortBy}&sortOrder=${sortOrder}`);
   }
 

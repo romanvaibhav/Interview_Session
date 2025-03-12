@@ -63,8 +63,49 @@ async function updateAssign(req, res) {
 
 async function readAssign(req,res){
     try{
-        const assignmentDetail=await assignmentSchema.find({});
-        return res.status(200).json(assignmentDetail);
+        let { page, limit, search, sortBy, sortOrder } = req.query;
+        console.log(search);
+
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 50;
+        const skip = (page - 1) * limit;
+
+        let filter = {}; 
+
+        // Apply search filter if search query is provided
+
+        if (search && search.trim() !=="") {
+            filter = {
+                title: { $regex: search, $options: "i" }
+            };
+        }
+
+        let sort = {};  
+        // Apply sorting if sortBy and sortOrder are provided
+        if (sortBy=="createdAt") {
+            sort["createdAt"] = -1;
+        } else {
+            // If sorting by a field other than createdAt, default to ascending order
+            sort[sortBy] = sortOrder ? (sortOrder === "asc" ? 1 : -1) : 1;
+        }
+
+        // Query the database
+        const employees = await assignmentSchema.find(filter)
+        .collation({ locale: "en", strength: 2 })  
+        .sort(sort)
+        .skip(skip)
+        .limit(limit);
+
+        // Get the total number of documents matching the filter
+        const totalEmployees = await assignmentSchema.countDocuments(filter);
+
+        // Send the response
+        res.status(200).json({
+            totalEmployees,
+            totalPages: Math.ceil(totalEmployees / limit),
+            currentPage: page,
+            employees
+        });
     }
     catch(err){
         return res.status(400).json({message:"Error at Adding Eployee Data", error: err.message });

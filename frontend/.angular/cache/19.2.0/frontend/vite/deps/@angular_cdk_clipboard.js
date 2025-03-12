@@ -1,6 +1,6 @@
 import {
   DOCUMENT
-} from "./chunk-DEVA3BEC.js";
+} from "./chunk-3ORNPP3T.js";
 import {
   Directive,
   EventEmitter,
@@ -17,8 +17,7 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵlistener
-} from "./chunk-Q6RMZ6D2.js";
-import "./chunk-P6U2JBMQ.js";
+} from "./chunk-O2B56Y7M.js";
 import "./chunk-XWLXMCJQ.js";
 
 // node_modules/@angular/cdk/fesm2022/clipboard.mjs

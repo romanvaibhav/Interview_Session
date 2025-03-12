@@ -19,16 +19,18 @@ export class ProjectsComponent {
   selectedEmployeeId: any = null;
   selectedEmpId:any;
 
-  searchText: any;
-  sortBy: any="Filter";
-  sortOrder: string = 'asc';
-
-  projectData:any;
-  pageNumbers: number[] = [];
   pages:any;
+  pageNumbers:number[]=[];
+  currentPage = 1;
+  pageLimit=10;
+  searchText:any;
+  sessionDate: any;
+  sortBy:any='createdAt';
+  pageArray:number[]=[5,10,15,20,25,30];
+  sortOrder: string = 'asc';
+  projectData:any;
   isModalOpen = false;
   isUpdate=false;
-  pageArray:number[]=[5,10,15,20,25,30];
 
   userid:any;
   projectId:any;
@@ -45,9 +47,9 @@ export class ProjectsComponent {
     console.log("USer ID",this.userid);
     this.projForm.get("userId")?.setValue(this.userid);
 
-    const org_id=this.router.snapshot.queryParams['id'];
-    console.log(org_id);
-    this.projForm.get("Org_id")?.setValue(org_id);
+    // const org_id=this.router.snapshot.queryParams['id'];
+    // console.log(org_id);
+    // this.projForm.get("Org_id")?.setValue(org_id);
     console.log(this.projForm.value);
     this.getProjData();
   }
@@ -146,18 +148,18 @@ export class ProjectsComponent {
     }
 
   getProjData(){
-    this.authService.getProject().subscribe({next:(value)=>{
+    this.authService.getProject(this.currentPage, this.pageLimit, this.searchText, this.sortBy).subscribe({next:(value:any)=>{
       console.log("Got the EmpData",value);
       this.projectData=value;
       console.log("Here is empData",this.projectData);
-      // this.pageLimit=this.empData.totalEmployees;
-      // this.pages=this.projectData.totalPages;
-      // console.log("Total Page",this.pages);
-      // this.pageNumbers = [];
-      // for (let i = 1; i <= this.pages; i++) {
-      //     this.pageNumbers.push(i);
-      // }
-      // console.log(this.pageNumbers);
+      this.pageLimit=this.projectData.totalEmployees;
+      this.pages=this.projectData.totalPages;
+      console.log("Total Page",this.pages);
+      this.pageNumbers = [];
+      for (let i = 1; i <= this.pages; i++) {
+          this.pageNumbers.push(i);
+      }
+      console.log(this.pageNumbers);
     },
     error:(err)=>{
       console.log("Frontend error while fetching empData",err);
@@ -166,44 +168,43 @@ export class ProjectsComponent {
   }
 
 
-  currentPage = 1;
-  pageLimit=10;
+  // currentPage = 1;
+  // pageLimit=10;
   goToPreviousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      // this.getEmpData();
+      this.getProjData();
     }
   }
 
 
   goToNextPage() {
-    if (this.currentPage < this.pages) {
+    if (this.currentPage <this.pages) {
       this.currentPage++;
-      // this.getEmpData();
+      this.getProjData();
     }
   }
 
 
   goToPage(page: number) {
     this.currentPage = page;
-    // this.getEmpData();
+    this.getProjData();
   }
   onPageLimitChange(event: any) {
     console.log("Event Target Value:", event.target.value);
     this.pageLimit = +event.target.value;
     console.log("Updated Page Limit:", this.pageLimit);
     this.currentPage = 1;
-    // this.getEmpData();
+    this.getProjData();
   }
 
 
   applyFilters() {
     console.log("Search Text:", this.searchText, "Sort By:", this.sortBy);  // Debugging
-
     if (this.searchText || this.sortBy) {  // ✅ Only run if filters exist
       console.log("Applying Filters...");
       this.currentPage = 1;
-      // this.getEmpData();
+      this.getProjData();
     }
   }
 
@@ -215,5 +216,30 @@ export class ProjectsComponent {
   //   }})
   // }
 
+  technologies: string[] = ['JavaScript', 'Python', 'Java', 'Angular', 'React', 'Node.js'];
+  selectedTechnologies: string[] = [];
+  techForm: FormGroup | undefined;
 
+  // Toggle selection when checkbox is clicked
+  toggleTechnology(tech: string) {
+    if (this.selectedTechnologies.includes(tech)) {
+      this.selectedTechnologies = this.selectedTechnologies.filter(t => t !== tech);
+    } else {
+      this.selectedTechnologies.push(tech);
+    }
+  }
+
+  // Add a custom technology
+  addCustomTechnology() {
+    const newTech = this.techForm?.value.customTechnology.trim();
+    if (newTech && !this.selectedTechnologies.includes(newTech)) {
+      this.selectedTechnologies.push(newTech);
+      this.techForm?.controls['customTechnology'].reset(); // Clear input field
+    }
+  }
+
+  // Remove a technology from the selected list
+  removeTechnology(tech: string) {
+    this.selectedTechnologies = this.selectedTechnologies.filter(t => t !== tech);
+  }
 }

@@ -29,7 +29,7 @@ export class HostoryComponent {
   pageLimit=10;
   searchText:any;
   sessionDate: any;
-  sortBy:any="Filter";
+  sortBy:any='createdAt';
   pageArray:number[]=[5,10,15,20,25,30];
 
   getSessionData() {
@@ -76,6 +76,29 @@ export class HostoryComponent {
     this.pageLimit = +event.target.value;
     console.log("Updated Page Limit:", this.pageLimit);
     this.currentPage = 1;
+    this.getSessionData();
+  }
+
+  // currentPage = 1;
+  // pageLimit=10;
+  goToPreviousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.getSessionData();
+    }
+  }
+
+
+  goToNextPage() {
+    if (this.currentPage < this.pages) {
+      this.currentPage++;
+      this.getSessionData();
+    }
+  }
+
+
+  goToPage(page: number) {
+    this.currentPage = page;
     this.getSessionData();
   }
 

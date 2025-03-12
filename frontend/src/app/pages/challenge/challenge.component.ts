@@ -22,7 +22,7 @@ export class ChallengeComponent {
   ProjectId:any;
   challengeDetail:any;
   challengeUrl=CHALLENGE_URL
-  constructor(private authService:AuthService, private route:ActivatedRoute, private clipboard: Clipboard,){}
+  constructor(private authService:AuthService, private route:ActivatedRoute, private clipboard: Clipboard, private router:Router){}
   ngOnInit():void{
     this.route.queryParamMap.subscribe(params => {
       this.candidateId = params.get('id');
@@ -36,10 +36,12 @@ export class ChallengeComponent {
   }
   submitSession(){
   }
-
-
+  currentPage:any;
+  pageLimit:any;
+  searchText:any;
+  sortBy:any;
   getProjData(){
-    this.authService.getProject().subscribe({next:(value:any)=>{
+    this.authService.getProject(this.currentPage, this.pageLimit, this.searchText, this.sortBy).subscribe({next:(value:any)=>{
       console.log("Got the EmpData",value);
       this.projectData=value;
       console.log("Here is empData",this.projectData);
@@ -106,7 +108,6 @@ export class ChallengeComponent {
     const status="Completed";
     this.authService.patchChallenge(challengeId,status,this.Score).subscribe({next:(value:any)=>{
       console.log("Succesfully patched the values",value);
-      // this.router.navigateByUrl("");
     },
     error:(err)=>{
       console.log("Got the error at the patching challenge values",err);
@@ -146,6 +147,7 @@ export class ChallengeComponent {
       this.displayedTime = "00:00"; // Reset displayed time
       this.timeElapsed = 0;
       clearInterval(this.timerInterval);
+      this.router.navigateByUrl("/user/home");
 
       this.sessionForm.reset();
       // this.sessionForm.get("interviewerId")?.setValue(this.userid);
@@ -174,7 +176,7 @@ export class ChallengeComponent {
     this.startTimer();
   }
 
-  timeElapsed: number = 0; // Store time in seconds
+  timeElapsed: number = 0;
   timerInterval: any;
   startTimer() {
     if (this.timerInterval) {
@@ -183,14 +185,14 @@ export class ChallengeComponent {
 
     this.timerInterval = setInterval(() => {
       this.timeElapsed++;
-      localStorage.setItem('timeElapsed', this.timeElapsed.toString()); // Store elapsed time
+      localStorage.setItem('timeElapsed', this.timeElapsed.toString());
     }, 1000);
   }
 
   loadTimer() {
     const storedTime = localStorage.getItem('timeElapsed');
     if (storedTime !== null) {
-      this.timeElapsed = parseInt(storedTime, 10); // Load saved time
+      this.timeElapsed = parseInt(storedTime, 10);
     }
   }
 
@@ -206,13 +208,13 @@ export class ChallengeComponent {
 
   pauseTimer() {
     clearInterval(this.timerInterval);
-    localStorage.setItem('timeElapsed', this.timeElapsed.toString()); // Save time when paused
+    localStorage.setItem('timeElapsed', this.timeElapsed.toString());
   }
 
   resetTimer() {
     clearInterval(this.timerInterval);
     this.timeElapsed = 0;
-    localStorage.removeItem('timeElapsed'); // Reset storage
+    localStorage.removeItem('timeElapsed');
   }
 
 
@@ -221,7 +223,7 @@ export class ChallengeComponent {
     console.log('Challenge submitted:', challengeId);
   }
   updateScore(challengeId: number, newScore: string) {
-    // const challenge = this.challengeDetail.find(c => c._id === challengeId);
+
       this.Score = newScore;
 
   }
